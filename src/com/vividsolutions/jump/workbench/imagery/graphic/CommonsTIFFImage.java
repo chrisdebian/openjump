@@ -14,7 +14,7 @@ import org.apache.commons.imaging.formats.tiff.TiffField;
 import org.apache.commons.imaging.formats.tiff.TiffImageMetadata;
 import org.apache.commons.imaging.formats.tiff.TiffImageParser;
 import org.apache.commons.imaging.formats.tiff.TiffImagingParameters;
-import org.apache.commons.imaging.formats.tiff.TiffRasterData;
+import org.apache.commons.imaging.formats.tiff.AbstractTiffRasterData;
 import org.apache.commons.imaging.formats.tiff.TiffRasterStatistics;
 import org.apache.commons.imaging.formats.tiff.TiffReader;
 import org.apache.commons.imaging.formats.tiff.constants.TiffTagConstants;
@@ -59,7 +59,7 @@ public class CommonsTIFFImage extends CommonsImage {
       }
 
       final TiffImagingParameters params = new TiffImagingParameters();
-      final TiffRasterData rasterData = directory.getRasterData(params);
+      final AbstractTiffRasterData rasterData = directory.getRasterData(params);
 
       final List<TiffField> fieldList = directory.getDirectoryEntries();
       
