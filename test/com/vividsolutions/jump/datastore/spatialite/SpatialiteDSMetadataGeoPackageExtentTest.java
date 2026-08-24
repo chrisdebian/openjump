@@ -155,4 +155,37 @@ public class SpatialiteDSMetadataGeoPackageExtentTest {
 
     assertNull(envelope);
   }
+
+  /**
+   * A single-feature (or single-point-geometry) table is a real, legal state: min_x == max_x
+   * and/or min_y == max_y, so the WKT built for the extent is a degenerate polygon (all vertices
+   * identical, or collinear). {@link WKTReader} parses this without throwing -- the resulting
+   * geometry is invalid as a polygon, but {@link org.locationtech.jts.geom.Geometry#getEnvelopeInternal()}
+   * still returns the correct bounding box regardless, which is all this code needs.
+   */
+  @Test
+  public void extentQueryHandlesDegenerateBoundingBoxes() throws Exception {
+    insertGeometryColumn("point_layer");
+    insertContents("point_layer", 5.0, 5.0, 5.0, 5.0); // single point: min == max on both axes
+
+    insertGeometryColumn("vertical_line_layer");
+    insertContents("vertical_line_layer", 5.0, 1.0, 5.0, 4.0); // min_x == max_x only
+
+    insertGeometryColumn("horizontal_line_layer");
+    insertContents("horizontal_line_layer", 1.0, 5.0, 4.0, 5.0); // min_y == max_y only
+
+    SpatialiteDSConnection dsConn = new SpatialiteDSConnection(conn);
+    SpatialiteDSMetadata metadata = (SpatialiteDSMetadata) dsConn.getMetadata();
+
+    Envelope point = executeExtentQuery(metadata.getSpatialExtentQuery1("", "point_layer", "geom"));
+    assertEquals(new Envelope(5.0, 5.0, 5.0, 5.0), point);
+
+    Envelope verticalLine =
+        executeExtentQuery(metadata.getSpatialExtentQuery1("", "vertical_line_layer", "geom"));
+    assertEquals(new Envelope(5.0, 5.0, 1.0, 4.0), verticalLine);
+
+    Envelope horizontalLine =
+        executeExtentQuery(metadata.getSpatialExtentQuery1("", "horizontal_line_layer", "geom"));
+    assertEquals(new Envelope(1.0, 4.0, 5.0, 5.0), horizontalLine);
+  }
 }
