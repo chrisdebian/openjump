@@ -192,7 +192,13 @@ partially addressed already.
 - [ ] #71 — InfoFrame inconsistent behaviour
 - [ ] #115 — Selection tool unexpected behaviour (check relation to #71 first — same reporter,
   same UI subsystem; confirm before treating as one fix)
-- [ ] #47 — `DataStoreDataSource` not reading GeoPackage table extent
+- [x] #47 — `DataStoreDataSource` not reading GeoPackage table extent. **PR #193 opened
+  2026-08-24**: `getSpatialExtentQuery1()` detected `OGC_GEOPACKAGE_LAYOUT` but never used it,
+  falling through to a no-op `select 1` since `isSpatialiteLoaded()` is false for a plain
+  GeoPackage. Now reads `gpkg_contents`' own `min_x/min_y/max_x/max_y` directly (built as WKT via
+  SQL concatenation, no Spatialite functions needed). Added `sqlite-jdbc` as a test-scoped
+  dependency to build a real, minimal GeoPackage-shaped SQLite DB for 4 new tests — no mocking.
+  151/151 tests pass, mutation-checked (revert fails 3/4 new tests as expected). Awaiting review.
 - [ ] #61 — Datastore layer not editable after source detached
 - [ ] #27 — Improve core database driver, get rid of db extensions (larger, likely feeds Phase 5)
 
