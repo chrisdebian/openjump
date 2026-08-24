@@ -135,9 +135,37 @@ scope creep. Every "still reproducible" claim must be backed by an actual local 
 - [x] Minimal `.github/PULL_REQUEST_TEMPLATE.md` noting issue creation is restricted and PRs
   should reference existing tracked issues where relevant. **PR #192 opened 2026-08-24**,
   docs-only, no code affected — awaiting review (as is PR #191).
-- [ ] Map test coverage by module (core vs. plugins/extensions) before Phase 5 — check the
-  README's extension migration status table for "Abandoned"/"Unmaintained" entries first, don't
-  write tests for dead extensions
+- [x] Map test coverage by module (core vs. plugins/extensions), 2026-08-24. **Correction to the
+  original assumption**: the README's extension migration table (Abandoned/Unmaintained entries)
+  is almost entirely about *separately-hosted* extension repos under the `openjump-gis` org, not
+  packages inside this repo's own `src/` tree — a handful are noted "Included in CORE" (CTS,
+  SkyPrinter, PostGIS), but there's no meaningful "dead extension code living in-tree" to exclude.
+  The real core-vs-UI split that matters for Phase 5 is different:
+
+  - **`com.vividsolutions.jump.*` ("core", 884 files)** — algorithmic/data-layer code:
+    `feature` (16), `geom` (19), `io` (38), `coordsys` (18), `qa` (20), `util` (36), `task` (10),
+    `warp` (9), `plugin` (16), `datastore` (73, split across `mariadb`/`spatialite`/
+    `spatialdatabases`/`h2`/`postgis`/`oracle`/`jdbc` drivers — **zero dedicated tests**, only
+    `test/io/AbstractDriverPanelProxy.java`, a test-support helper, not a real test case).
+    `workbench` (598) is mostly UI (`workbench/ui` alone is 451 files) but also holds
+    non-UI-ish subsystems: `model` (34), `plugin` (25), `datasource` (15), `driver` (14).
+  - **`org.openjump.*` ("newer OJ-specific", 595 files)** — mostly UI plugins:
+    `core/ui/plugin` alone is 320 files. Only 2 dedicated tests exist anywhere in this whole tree
+    (`DeleteDuplicateGeometriesPlugInTest`, `UnionByAttributePlugInTest`).
+  - **`de.*`/`it.*` (69 files)** — small, single-purpose contributed extras (sridsupport, pirol,
+    deejump, adbtoolbox). Low priority either way.
+  - **The existing 48 test files mostly don't mirror the `src` package layout at all** — the
+    bulk live in a flat legacy `test/junit/`/`test/io/` structure covering fundamentals
+    (geometry, feature, IO, string/collection utils), not the `workbench`/`ui` subsystems. This
+    matches the 21 skipped tests seen in the `mvn test` run (2026-08-24) — those are almost
+    certainly UI-dependent tests that need a real display, which isn't available in this
+    environment (see Environment section above).
+
+  **Conclusion for Phase 5**: `com.vividsolutions.jump.datastore` (73 files, 0 tests) is the
+  single most concrete, display-independent gap, and it's exactly what #27/#47/#61 already
+  target — good confirmation the roadmap's existing priority order is aimed at the right place.
+  Anything under `workbench/ui` or `org.openjump.core.ui.*` (roughly 800+ files combined) needs a
+  display to test meaningfully and should stay out of scope until one's available.
 
 ## Phase 2 — CI hardening
 
