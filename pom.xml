@@ -1741,6 +1741,16 @@ ${project.artifactId} ${project.version} Changelog
             <version>3.0</version>
             <scope>test</scope>
         </dependency>
+        <!-- Test-scoped only: the Spatialite driver's own runtime dependency on sqlite-jdbc
+        is fetched separately via wget into the PLUS distribution (see db.folder above), not
+        declared as a Maven dependency, so it isn't otherwise available at test time. Same
+        version already vetted and used there (3.36.0.3). -->
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.36.0.3</version>
+            <scope>test</scope>
+        </dependency>
         <!-- Version 2.2.1 is the last of the unmaintained 2.2 series
         There are 2.5.x and 2.7 versions but they are much bigger
         don't know if we need them as only few if any people use jython -->
