@@ -132,8 +132,9 @@ scope creep. Every "still reproducible" claim must be backed by an actual local 
   https://ojwiki.soldin.de/index.php?title=Eclipse:_Set_up_project_and_example_extension_from_git_sources
   (confirmed live 2026-08-24) — link, don't duplicate at length. **PR #191 opened 2026-08-24**,
   build succeeds cleanly (`mvn -B package -P snapshot`, 147 tests pass) — awaiting review.
-- [ ] Minimal `.github/PULL_REQUEST_TEMPLATE.md` noting issue creation is restricted and PRs
-  should reference existing tracked issues where relevant
+- [x] Minimal `.github/PULL_REQUEST_TEMPLATE.md` noting issue creation is restricted and PRs
+  should reference existing tracked issues where relevant. **PR #192 opened 2026-08-24**,
+  docs-only, no code affected — awaiting review (as is PR #191).
 - [ ] Map test coverage by module (core vs. plugins/extensions) before Phase 5 — check the
   README's extension migration status table for "Abandoned"/"Unmaintained" entries first, don't
   write tests for dead extensions
