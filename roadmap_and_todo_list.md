@@ -9,6 +9,21 @@ migration exists or is planned (confirmed 2026-08-24)
 `project_openjump_status` memory)
 **Surveyed at**: commit `a385da2` (2026-08-10)
 
+## Environment
+
+**Maven installed 2026-08-24** — no system package manager access (no passwordless sudo), so
+installed as a user-level binary at `~/dev/tools/apache-maven-3.9.9/` (downloaded from
+`archive.apache.org`, SHA-512 verified against the published checksum before extracting; no root
+needed, easily removable). Maven 3.8.7 was tried first and rejected — one of the build plugins
+(`git-commit-id-maven-plugin`) requires Maven ≥3.9.0. Confirmed working: `mvn -B compile -P
+snapshot` and `mvn -B test -P snapshot` both `BUILD SUCCESS`, 147 tests pass (21 skipped, likely
+GUI-dependent). Add `~/dev/tools/apache-maven-3.9.9/bin` to `PATH` or invoke `mvn` by full path.
+
+**Still no display/Xvfb available** — a real build now exists, but this is a Swing GUI
+application and there's still no way to interactively click through it. Source-level analysis
+plus a successful compile/test run is as far as verification can go without one; say so plainly
+in any comment or PR that would normally need a UI check, same as done for #145/#43/#41's triage.
+
 ## Ground rules (from the onboarding email, Chris's own standing rules for this repo)
 
 - British English throughout — code comments, commit messages, any docs.
@@ -76,6 +91,12 @@ Per the email's own phasing (Phase 0 fact-check is done, this is the order for w
   found (#54), everything else confirmed accurate.
 
 ## Phase 1a — Issue triage (help without necessarily fixing)
+
+**Follow-up, same day**: all three "no Maven available" caveats below were posted before Maven
+was installed (see Environment section above). Once it was, `mvn -B package -P snapshot` and
+`mvn -B test -P snapshot` both succeeded (147 tests pass), confirming every file/line quoted in
+these three comments is real, live, compiling code. A one-line follow-up was posted on each
+issue noting this — the display/UI-testing gap still applies to all three.
 
 - [x] #41 — Error Saving project (2022-01-23) — **commented 2026-08-24, root-caused**:
   `DataSourceFileLayerSaver.write()` (used by "Save dataset as (testing)" specifically, not the
