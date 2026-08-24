@@ -1,7 +1,6 @@
 ## What does this change do, and why?
 
-<!-- A short description. If it fixes a reported problem, link the issue below rather than
-     opening a new one — issue creation is currently restricted on this repo. -->
+<!-- A short description. If it fixes a reported problem, link the issue below. -->
 
 Fixes/relates to #
 
