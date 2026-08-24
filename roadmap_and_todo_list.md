@@ -80,7 +80,12 @@ Per the email's own phasing (Phase 0 fact-check is done, this is the order for w
 - [ ] #41 — Error Saving project (2022-01-23) — not yet assessed
 - [ ] #43 — Modified Features (2022-01-29) — not yet assessed
 - [ ] #65 — ECW support on OpenJUMP (2022-10-19) — not yet assessed
-- [ ] #145 — copy-paste style also copies SRID (2025-07-12) — not yet assessed
+- [x] #145 — copy-paste style also copies SRID (2025-07-12) — **commented 2026-08-24**: verified
+  the SRID-exclusion fix mukoki referenced (r5312) is genuinely present in current `main`
+  (`PasteStylesPlugIn.java`, explicit `if (style instanceof SRIDStyle) continue;`). No Maven/
+  display available in this environment, so this is a source-code verification, not a live UI
+  reproduction — said so plainly in the comment. Mukoki's second, still-open question (why
+  setting a new SRID detaches the datastore source) is unaddressed, flagged as such.
 - [ ] #147 — Is it possible to increase WMTS rendering (2025-09-13) — not yet assessed
 
 For each: reproduce against current `main`, comment confirming still-reproducible / no-longer-
