@@ -77,7 +77,14 @@ Per the email's own phasing (Phase 0 fact-check is done, this is the order for w
 
 ## Phase 1a — Issue triage (help without necessarily fixing)
 
-- [ ] #41 — Error Saving project (2022-01-23) — not yet assessed
+- [x] #41 — Error Saving project (2022-01-23) — **commented 2026-08-24, root-caused**:
+  `DataSourceFileLayerSaver.write()` (used by "Save dataset as (testing)" specifically, not the
+  regular save path) stores the raw `java.net.URI` object under `DataSource.URI_KEY` in the
+  layer's DataSource parameters (`DataSourceFileLayerSaver.java:51`); no `java2xml` binding exists
+  anywhere for `java.net.URI`, so a subsequent project save throws exactly the reported exception
+  when serialising that parameter. Confirmed the regular (non-testing) save path doesn't store a
+  `URI_KEY` value this way, matching the report's own observation. No fix attempted — source-level
+  root cause only, no Maven/display available to build and verify a fix end-to-end.
 - [x] #43 — Modified Features (2022-01-29) — **commented 2026-08-24**: confirmed still present,
   verified via exhaustive source search — `BasicFeature.setModified(false)` is never called
   anywhere in the codebase (only `setModified(true)`, in `FeatureUtil`). Found and noted a
