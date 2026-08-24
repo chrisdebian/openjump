@@ -78,7 +78,13 @@ Per the email's own phasing (Phase 0 fact-check is done, this is the order for w
 ## Phase 1a — Issue triage (help without necessarily fixing)
 
 - [ ] #41 — Error Saving project (2022-01-23) — not yet assessed
-- [ ] #43 — Modified Features (2022-01-29) — not yet assessed
+- [x] #43 — Modified Features (2022-01-29) — **commented 2026-08-24**: confirmed still present,
+  verified via exhaustive source search — `BasicFeature.setModified(false)` is never called
+  anywhere in the codebase (only `setModified(true)`, in `FeatureUtil`). Found and noted a
+  related-but-distinct save-time reset (`AbstractSaveDatasetAsPlugIn` calls
+  `layer.setFeatureCollectionModified(false)`) that clears a different, layer-level flag, not the
+  per-feature one — likely why this could look partially fixed at a glance. Source-level check
+  only, no Maven/display available to confirm via the actual UI.
 - [ ] #65 — ECW support on OpenJUMP (2022-10-19) — not yet assessed
 - [x] #145 — copy-paste style also copies SRID (2025-07-12) — **commented 2026-08-24**: verified
   the SRID-exclusion fix mukoki referenced (r5312) is genuinely present in current `main`
