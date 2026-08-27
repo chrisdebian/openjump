@@ -30,6 +30,7 @@ public class SpatialiteDSMetadata extends SpatialDatabasesDSMetadata {
 
   public static String GC_COLUMN_NAME = "geometry_columns";
   public static String GPKG_GC_COLUMN_NAME = "gpkg_geometry_columns";
+  public static String GPKG_CONTENTS_TABLE_NAME = "gpkg_contents";
 
   /**
    * True if spatialite mod extension loaded
@@ -239,6 +240,27 @@ public class SpatialiteDSMetadata extends SpatialDatabasesDSMetadata {
 
     if (gcType == null) {
       return "select 1";
+    }
+    if (this.geometryColumnsLayout == GeometryColumnsLayout.OGC_GEOPACKAGE_LAYOUT) {
+      // GeoPackage tables record their own extent in gpkg_contents (min_x, min_y, max_x,
+      // max_y) — read that directly rather than relying on Spatialite's extent() SQL
+      // function, which typically isn't loaded/available for a plain GeoPackage file
+      // (GeoPackage is a self-contained spec, independent of the Spatialite extension).
+      // Without this, getSpatialExtentQuery1() fell through to isSpatialiteLoaded() being
+      // false and returned "select 1" (no usable extent) for every GeoPackage table, so
+      // "Zoom to layer" had nothing to zoom to whenever the current view didn't already
+      // intersect the data. Built as a WKT string via SQL concatenation (not extent()/
+      // st_asBinary(), which need Spatialite) so it works on a bare SQLite connection;
+      // min_x/min_y/max_x/max_y are nullable per the GeoPackage spec (an empty table), so
+      // only build the polygon when all four are present.
+      return String.format(
+          "select case when min_x is not null and min_y is not null"
+              + " and max_x is not null and max_y is not null"
+              + " then 'POLYGON((' || min_x || ' ' || min_y || ',' || max_x || ' ' || min_y"
+              + " || ',' || max_x || ' ' || max_y || ',' || min_x || ' ' || max_y"
+              + " || ',' || min_x || ' ' || min_y || '))' else null end"
+              + " from \"%s\" where table_name = '%s'",
+          GPKG_CONTENTS_TABLE_NAME, table);
     }
     if (this.isSpatialiteLoaded()) {
       if (gcType == GeometricColumnType.WKB) {
