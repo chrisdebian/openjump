@@ -122,8 +122,8 @@
                       <goal>wget</goal>
                     </goals>
                     <configuration>
-                      <url>https://github.com/xerial/sqlite-jdbc/releases/download/3.36.0.3/sqlite-jdbc-3.36.0.3.jar</url>
-                      <sha1>7fa71c4dfab806490cb909714fb41373ec552c29</sha1>
+                      <url>https://github.com/xerial/sqlite-jdbc/releases/download/3.53.4.0/sqlite-jdbc-3.53.4.0-natives-all.jar</url>
+                      <sha256>ef8f9e4cdbc41abfbb818b432af5aa23a134e03aefd841a18fb842fe2c2d9b06</sha256>
                       <unpack>false</unpack>
                       <outputDirectory>${db.folder}</outputDirectory>
                     </configuration>
@@ -1748,7 +1748,7 @@ ${project.artifactId} ${project.version} Changelog
         <dependency>
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>
-            <version>3.36.0.3</version>
+            <version>3.53.4.0</version>
             <scope>test</scope>
         </dependency>
         <!-- Version 2.2.1 is the last of the unmaintained 2.2 series
