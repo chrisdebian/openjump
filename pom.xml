@@ -110,8 +110,8 @@
                       <goal>wget</goal>
                     </goals>
                     <configuration>
-                      <url>https://dlm.mariadb.com/Connectors/java/connector-java-3.5.8/mariadb-java-client-3.5.8.jar</url>
-                      <sha1>272078c15f3f45051aa4ff5630d563dd0969d834</sha1>
+                      <url>https://dlm.mariadb.com/4787586/Connectors/java/connector-java-3.5.10/mariadb-java-client-3.5.10.jar</url>
+                      <sha1>c6a687f7ccb65394103cd516e0583e61e6d92c24</sha1>
                       <unpack>false</unpack>
                       <outputDirectory>${db.folder}</outputDirectory>
                     </configuration>
