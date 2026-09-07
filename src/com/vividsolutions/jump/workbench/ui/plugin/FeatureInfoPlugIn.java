@@ -81,9 +81,6 @@ public class FeatureInfoPlugIn extends AbstractPlugIn {
         reportNothingToUndoYet(context);
         // Reuse the TaskFrame's single PrimaryInfoFrame instead of creating a new
         // InfoFrame on every invocation - matches UniqueFeatureInfoPlugIn's pattern
-        // (issue #71: repeated use, e.g. via a keyboard shortcut, used to leave
-        // dozens of InfoFrames open with no way to tell which one reflected the
-        // current selection).
         TaskFrame taskFrame = ((TaskFrameProxy) context.getActiveInternalFrame()).getTaskFrame();
         InfoFrame infoFrame = taskFrame.getInfoFrame();
         infoFrame.getModel().clear();
