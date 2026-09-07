@@ -153,6 +153,11 @@ if %JAVAVER_MAJOR% geq 9 if %JAVAVER_MAJOR% lss 11 (
   set JAVA_OPTS=%JAVA_OPTS% --add-modules java.se.ee
 )
 
+rem -- java24+ wants explicit jni allowal
+if %JAVAVER_MAJOR% geq 24 (
+  set JAVA_OPTS=%JAVA_OPTS% --enable-native-access=ALL-UNNAMED
+)
+
 rem -- detect if java is 64bit --
 for /f "delims=" %%v in ('echo "%JAVA_VERSIONSTRING%"^|findstr /I "64-Bit"') do (
   set JAVA_X64=64
@@ -300,6 +305,12 @@ rem -- set default app options --
 set JUMP_OPTS=-default-plugins bin\default-plugins.xml -state "%SETTINGS_HOME%" -extensions-directory "%LIB%\ext" %JUMP_OPTS%
 rem --- workbench-properties.xml is used to manually load plugins (ISA uses this) ---
 if EXIST "bin\workbench-properties.xml" set "JUMP_OPTS=-properties bin\workbench-properties.xml %JUMP_OPTS%"
+
+rem -- debug info --
+if /i NOT "%JAVA_BIN%"=="javaw" echo ---JUMP_OPTS--- & echo %JUMP_OPTS%
+
+rem -- debug info --
+if /i NOT "%JAVA_BIN%"=="javaw" echo ---JAVA_OPTS--- & echo %JAVA_OPTS%
 
 rem -- disconnect javaw from console by using start --
 rem -- note: title is needed or start won't accept quoted path to java binary (protect spaces in javapath) --
