@@ -126,10 +126,6 @@ public class EditablePlugIn extends AbstractPlugIn implements CheckBoxed {
             // materialise its currently-visible features into an in-memory,
             // writable collection *before* closing the connection - otherwise
             // add/remove/clear all silently throw UnsupportedOperationException
-            // forever after, even though the layer now claims to be editable
-            // (issue #61: detaching only cleared the DataSourceQuery reference,
-            // never replaced the underlying feature storage, so every edit was
-            // dropped with no visible error).
             FeatureCollection wrappee = layer.getFeatureCollectionWrapper().getUltimateWrappee();
             if (wrappee instanceof DynamicFeatureCollection) {
               DynamicFeatureCollection dynamic = (DynamicFeatureCollection) wrappee;
