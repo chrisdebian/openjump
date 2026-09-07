@@ -32,6 +32,8 @@ public class SpatialiteDSMetadata extends SpatialDatabasesDSMetadata {
   public static String GPKG_GC_COLUMN_NAME = "gpkg_geometry_columns";
   public static String GPKG_CONTENTS_TABLE_NAME = "gpkg_contents";
 
+  // will be set to true if the loading failed
+  private static boolean spatialiteFailed = false;
   /**
    * True if spatialite mod extension loaded
    */
@@ -308,6 +310,10 @@ public class SpatialiteDSMetadata extends SpatialDatabasesDSMetadata {
   }
 
   private void checkSpatialiteLoaded() {
+    // we only try once to keep noise to a minimum
+    if (spatialiteFailed || spatialiteLoaded)
+      return;
+
     // tries to load spatialite, assuming it is available on the system's path
     Logger.trace("PATH -> "+System.getenv("PATH"));
     Statement stmt = null;
@@ -326,9 +332,10 @@ public class SpatialiteDSMetadata extends SpatialDatabasesDSMetadata {
           "sqlite mod_spatialite version "
           + this.getSpatialiteVersion() + " loaded successfully.");
     } catch (Exception e) {
+      spatialiteFailed = true;
       Logger.warn(
-          "FAILED to load sqlite extension mod_spatialite."
-          , e);
+          "FAILED to load sqlite extension mod_spatialite. This can safely be ignored if spatialite is not expected to be installed or used.",
+          e);
     } finally {
       try {
         stmt.close();
